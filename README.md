@@ -2,7 +2,7 @@
 
 ### Or: why use two servers when one will do? ###
 
-[Full Tutorial]()
+[Full Tutorial](https://MERNCraft.github.io/express-react)
 
 When creating a web site using the MERN stack (MongoDB, Express, React and NodeJS), you might use [Vite](https://vite.dev/) to develop your frontend, and then use a hosting site such as [Render.com](https://render.com/) to host your frontend and backend separately. Having the frontend run from a different origin URL than the backend means that you will have to deal with [CORS](https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS) issues (Cross-Origin Resource Sharing).
 
@@ -29,7 +29,7 @@ As a result, CORS is no longer an issue.
 
 ---
 
-[This tutorial]() will walk you through creating a simple React frontend and Express backend, and setting up a workflow that simplifies the whole deployment process.
+[This tutorial](https://MERNCraft.github.io/express-react) will walk you through creating a simple React frontend and Express backend, and setting up a workflow that simplifies the whole deployment process.
 
 As a bonus, it will also show you how to set up an [Nginx](https://www.f5.com/go/product/welcome-to-nginx) reverse-proxy on your development computer, so that you can preview the "production" version of your site from the comfort of your own development computer.
 
