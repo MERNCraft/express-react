@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
+  <title>Express + React</title>
+
+  <link rel="stylesheet" href="tutorial/styles.css">
+  <link rel="stylesheet" href="tutorial/media-queries.css">
+  <link rel="stylesheet" href="tutorial/prism/prism.css">
+
+  <script defer src="tutorial/prism/prism.js"></script>
+  <script defer src="tutorial/storage.js"></script>
+  <script defer src="tutorial/script.js"></script>
+</head>
+
+<body>
+<main id="main">
+<header>
+<h1>Use Express to serve React</h1>
+<h3>Why use two servers when one will do?</h3>
+<small>November 2024</small>
+</header>
+
+ <!-- _sec -->
+<section
+  id="target-id"
+  data-item="Menu Item"
+>
+  <h2>Section Header</h2>
+  <p>Content</p>
+</section>
+
+<section
+  id="conclusion"
+  data-item="Conclusion"
+>
+  <h2>Conclusion</h2>
+  <p>Content</p>
+  <hr>
+  <div class="repo">
+    <a href="https://github.com/MERNCraft/tutorialX">
+      <img src="tutorial/images/github.svg" alt="github logo">
+      <span>GitHub repository</span>
+    </a>
+  </div>
+  <aside aria-label="feedback" class="tip center feedback-small">
+    <p>If you had any difficulties with this tutorial, or any suggestions on how to improve it, please <a href="https://github.com/MERNCraft/tutorialX/issues/new">submit&nbsp;an&nbsp;issue&nbsp;on&nbsp;GitHub</a>.</p>
+  </aside>
+  <aside aria-label="your feedback" class="tip center feedback-wide">
+    <p>If you had any difficulties with this tutorial,<br>or any suggestions on how to improve it,<br>please <a href="https://github.com/MERNCraft/tutorialX/issues/new">submit an issue on GitHub</a>.</p>
+  </aside>
+</section>
+
+<section id="intro">
+<h2>Introduction</h2>
+<p>
+  When creating a web site using the MERN stack (MongoDB, Express, React and NodeJS), you might use <a href="https://vite.dev/">Vite</a> to develop your frontend, and then use a hosting site such as <a href="https://render.com/">Render.com</a> to host your frontend and backend separately. Having the frontend run from a different origin URL than the backend means that you will have to deal with <a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS">CORS</a> issues (Cross-Origin Resource Sharing).</p>
+
+  <p>However, when a site built with Vite is deployed, the <code>build</code> process actually reduces your site to three static files:</p>
+  <ul>
+    <li>index.html</li>
+    <li>assets/index_s0m35tuff.js</li>
+    <li>assets/index_m0reT3xt.css</li>
+  </ul>
+
+  <p>The <code>build</code> process creates these in a folder called <code>dist/</code> and adds to this folder any additional files that you may have included in the <code>public/</code> folder.</p>
+
+  <p>In other words, you can deploy your Vite React frontend as simply as you would for a site built by hand with HTML, CSS and JavaScript.</p>
+
+  <p>Your Express backend can <a href="https://expressjs.com/en/starter/static-files.html">serve static files from a chosen folder</a>. This means that you can use code as simple as...</p>
+<pre><code class="language-javascript">app.use(express.static('public'))
+</code></pre>
+  <p>... to serve your Vite React frontend. All you have to do is:</p>
+  <ul>
+    <li>Run <code>npm run build</code> in your Vite React director</li>
+    <li>Copy the files from the <code>dist/</code> folder into the <code>public/</code> folder in your backend directory</li>
+    <li>Deploy your backend server.</li>
+  </ul>
+  <p>As a result, CORS is no longer an issue.</p>
+
+<hr>
+
+<p>In this tutorial, you will be learning how to:</p>
+<ol>
+  <li><a href="#">Create a simple React frontend with Vite</a></li>
+  <li><a href="#">Use React-Router-DOM to create pages and internal links</a></li>
+  <li><a href="#">Create a simple Express backend</a></li>
+  <li><a href="#">Ensure that the backend works with React-Router-DOM</a></li>
+  <li><a href="#">Ensure that the backend is accessible only to the frontend</a></li>
+  <li><a href="#">Connect to a MongoDB database with Mongoose</a></li>
+  <li><a href="#">Create scripts to automate the deployment process</a></li>
+  <li><a href="#">Deploy your site to Render.com</a></li>
+</ol>
+<p>As a bonus, you can also learn how to:</p>
+<ol start="9">
+  <li><a href="#">Set up an Nginx reverse proxy</a></li>
+  <li><a href="#">Create self-signed certificates, to run the backend with the HTTPS protocol through the reverse proxy</a></li>
+  <li><a href="#">Do other stuff</a></li>
+</ol>
+<h4>Prerequisites</h4>
+<p>Before you start you should already have:</p>
+<ul>
+  <li><a href="https://code.visualstudio.com/" class="external">A code editor, such as Microsoft's free Virtual Studio Code<span></span></a></li>
+  <li><a href="https://docs.npmjs.com/downloading-and-installing-node-js-and-npm" class="external">Downloaded and installed Node.js and NPM<span></span></a></li>
+  <li><a href="https://www.mongodb.com/docs/atlas/getting-started/" class="external">Set up a MongoDB database<span></span></a></li>
+</ul>
+<p>You should already be familiar with:</p>
+<ul>
+  <li>JavaScript</li>
+  <li>Using <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise" class="external">Promises<span></span></a> and the <a href="-" class="external"><code>async/await</code><span></span></a> syntax</li>
+  <li>The <a href="https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API/Using_Fetch" class="external"><code>fetch API</code><span></span></a>, which allows a browser to retrieve data from a server.</li>
+  <li>React components</li>
+  <li>Basic bash commands in a Terminal window</li>
+  <li>The most common <code>npm</code> commands</li>
+</ul>
+<div class="repo">
+  <a href="https://github.com/MERNCraft/tutorialX">
+    <img src="tutorial/images/github.svg" alt="github logo">
+    <span>GitHub repository</span>
+  </a>
+</div>
+<aside aria-label="send feedback" class="tip center feedback-small">
+  <p>If you have any difficulties with this tutorial, or any suggestions on how to improve it, please <a href="https://github.com/MERNCraft/tutorialX/issues/new">submit&nbsp;an&nbsp;issue&nbsp;on&nbsp;GitHub</a>.</p>
+</aside>
+<aside aria-label="give feedback" class="tip center feedback-wide">
+  <p>If you have any difficulties with this tutorial,<br>or any suggestions on how to improve it,<br>please <a href="https://github.com/MERNCraft/tutorialX/issues/new">submit an issue on GitHub</a>.</p>
+</aside>
+<hr>
+<!-- <aside aria-label="not included" class="warn">
+  <p>In this tutorial, you <strong>won't</strong> be learning:</p>
+
+  <ul>
+    <li>Other stuff*</li>
+  </ul>
+
+  <p>* These topics will be covered in future tutorials.</p>
+</aside> -->
+
+<aside aria-label="development environment" class="vscode">
+  <h4>Development Environment</h4>
+
+  <p>I work on MacOS Sonoma, using <a href="https://code.visualstudio.com/" class="external">Microsoft's Visual Studio Code<span></span></a> as my code editor and <a href="https://www.mozilla.org/en-US/firefox/new/" class="external">Mozilla Firefox<span></span></a> as my default browser. If you are working on a different operating system, using a different IDE or browser, the screenshots may not match exactly what you see.</p>
+  <p>Any suggestions specific to VS Code will be shown in a field with a dark blue background like this.</p>
+</aside>
+</section>
+
+<div class="spacer"></div>
+<footer id="footer">
+  <button type="button" id="previous" disabled>&lt;</button>
+  <span id="previous-name"></span>
+  <span class="spacer"></span>
+  <button type="button" id="next">&gt;</button>
+  <span id="next-name"></span>
+</footer>
+</main>
+
+<nav
+  id="menu"
+  class="open"
+>
+  <svg
+    id="menu-icon"
+    viewBox="0 0 100 100"
+    preserveAspectRatio="xMidYMid meet"
+  >
+    <g
+      class="menu"
+      stroke-width="20"
+      stroke-linecap="round"
+    >
+      <path
+        d="M5,20 L5,80 H95 L95,20 z"
+        fill="#0000"
+        stroke="none"
+      />
+      <line
+        x1="15"
+        y1="20"
+        x2="85"
+        y2="20"
+      />
+      <line
+        x1="15"
+        y1="50"
+        x2="85"
+        y2="50"
+      />
+      <line
+        x1="15"
+        y1="80"
+        x2="85"
+        y2="80"
+      />
+    </g>
+  </svg>
+
+  <ul id="menu-items">
+    <li class="spacer"></li>
+    <li><a class="feedback" href="https://github.com/MERNCraft/tutorialX/issues/new">Feedback</a></li>
+    <li class="repo">
+      <a
+        class="feedback"
+        href="https://github.com/MERNCraft/tutorialX"
+      >
+        <img src="tutorial/images/github.svg" alt="github logo">
+        <span>GitHub repository</span>
+      </a>
+    </li>
+  </ul>
+</nav>
+</body>
+</html>

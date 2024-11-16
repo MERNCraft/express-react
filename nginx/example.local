@@ -1,0 +1,39 @@
+server {
+    listen 80;
+    server_name example.local;
+
+    # Redirect HTTP to HTTPS
+    return 301 https://$host$request_uri;
+}
+
+server {
+    listen 443 ssl;
+    server_name example.local;
+
+    # Reverse Proxy API calls to the Express backend (localhost:1337)
+    location / {
+        # Proxy to Express backend
+        proxy_pass http://localhost:1333;
+
+        # Preserve the original host
+        proxy_set_header Host $host;
+
+        # Upgrade connection (for WebSockets)
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection 'upgrade';
+        proxy_cache_bypass $http_upgrade;
+
+        # Pass the real client IP
+        proxy_set_header X-Real-IP $remote_addr;
+        # Forward client IP chain
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        # Pass the protocol (http or https)
+        proxy_set_header X-Forwarded-Proto $scheme;
+        # Pass the original port
+        proxy_set_header X-Forwarded-Port $server_port;
+    }
+
+    # CERTIFICATES AND SECURITY
+    include /Users/james/Documents/Repos/Tests/_NGINX/express-wraps-react/nginx/ssl.conf;
+}
